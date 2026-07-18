@@ -1,0 +1,90 @@
+<div class="auth-page">
+  <div class="auth-page__stars" aria-hidden="true"></div>
+  <div class="auth-page__orbs" aria-hidden="true">
+    <div class="auth-orb auth-orb--teal"></div>
+    <div class="auth-orb auth-orb--gold"></div>
+  </div>
+
+  <div class="auth-shell">
+    <div class="auth-card">
+      <div class="auth-emblem" aria-hidden="true">
+        <div class="auth-emblem__ring">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" stroke-opacity="0.5"/>
+            <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4"/>
+            <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" opacity="0.9"/>
+          </svg>
+        </div>
+      </div>
+
+      <header class="auth-header">
+        <span class="auth-step">Step 1 of 2</span>
+        <h1 class="auth-logo">Jiivan</h1>
+        <p class="auth-heading">Begin your cosmic journey</p>
+        <p class="auth-tagline">Where numbers meet destiny</p>
+      </header>
+
+      <div class="auth-divider" aria-hidden="true">
+        <span class="auth-divider__star">✦</span>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="auth-field">
+          <label for="name" class="auth-label">Full Name</label>
+          <input
+            id="name"
+            type="text"
+            class="auth-input"
+            formControlName="name"
+            autocomplete="name"
+            placeholder="Enter your full name"
+            [class.is-invalid]="isInvalid('name')"
+          />
+          @if (isInvalid('name')) {
+            <div class="invalid-feedback">
+              @if (loginForm.controls.name.errors?.['required']) {
+                Full name is required.
+              } @else if (loginForm.controls.name.errors?.['minlength']) {
+                Name must be at least 2 characters.
+              }
+            </div>
+          }
+        </div>
+
+        <div class="auth-field">
+          <label for="mobile" class="auth-label">Mobile Number</label>
+          <input
+            id="mobile"
+            type="tel"
+            class="auth-input"
+            formControlName="mobile"
+            inputmode="numeric"
+            maxlength="10"
+            autocomplete="tel"
+            placeholder="10-digit mobile number"
+            (input)="onMobileInput($event)"
+            [class.is-invalid]="isInvalid('mobile')"
+          />
+          @if (isInvalid('mobile')) {
+            <div class="invalid-feedback">
+              @if (loginForm.controls.mobile.errors?.['required']) {
+                Mobile number is required.
+              } @else {
+                Enter a valid 10-digit mobile number.
+              }
+            </div>
+          }
+        </div>
+
+        <button type="submit" class="btn btn-jiivan" [disabled]="isSubmitting()">
+          @if (isSubmitting()) {
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          }
+          Send OTP →
+        </button>
+      </form>
+
+      <p class="auth-footer">Guided by numerology &amp; vastu wisdom</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,90 @@
+<div class="auth-page">
+  <div class="auth-page__stars" aria-hidden="true"></div>
+  <div class="auth-page__orbs" aria-hidden="true">
+    <div class="auth-orb auth-orb--teal"></div>
+    <div class="auth-orb auth-orb--gold"></div>
+  </div>
+
+  <div class="auth-shell">
+    <div class="auth-card">
+      <div class="auth-emblem" aria-hidden="true">
+        <div class="auth-emblem__ring">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.3 4.7-3.2 6L12 22l-3.8-7C6.3 13.7 5 11.5 5 9a7 7 0 0 1 7-7z" stroke-linejoin="round"/>
+            <circle cx="12" cy="9" r="2.5" fill="currentColor" stroke="none" opacity="0.85"/>
+          </svg>
+        </div>
+      </div>
+
+      <header class="auth-header">
+        <span class="auth-step">Step 2 of 2</span>
+        <h1 class="auth-logo">Jiivan</h1>
+        <p class="auth-heading">Verify your number</p>
+        <p class="auth-subtitle">
+          We sent a 6-digit sacred code to
+          <span class="auth-mobile d-block">
+            {{ maskedMobilePrefix() }}<span class="auth-mobile__highlight">{{ maskedMobileSuffix() }}</span>
+          </span>
+        </p>
+      </header>
+
+      <div class="auth-divider" aria-hidden="true">
+        <span class="auth-divider__star">✦</span>
+      </div>
+
+      <form [formGroup]="otpForm" (ngSubmit)="onVerify()" novalidate>
+        <div class="auth-otp-section">
+          <label class="auth-otp-label">Enter verification code</label>
+          <div class="otp-row" formArrayName="digits">
+            @for (ctrl of digits.controls; track $index) {
+              <input
+                #otpInput
+                type="text"
+                class="otp-box"
+                [formControlName]="$index"
+                inputmode="numeric"
+                maxlength="1"
+                autocomplete="one-time-code"
+                aria-label="OTP digit {{ $index + 1 }} of 6"
+                (input)="onOtpInput($index, $event)"
+                (keydown)="onOtpKeydown($index, $event)"
+                (paste)="onOtpPaste($event)"
+              />
+            }
+          </div>
+        </div>
+
+        @if (otpError()) {
+          <p class="auth-error" role="alert">
+            <span aria-hidden="true">⚠</span>
+            {{ otpError() }}
+          </p>
+        }
+
+        <p class="auth-resend-wrap">
+          @if (canResend()) {
+            Didn't receive it?
+            <button type="button" class="auth-resend" (click)="onResend()">
+              Resend OTP
+            </button>
+          } @else {
+            Resend code in <strong>{{ countdown() }}s</strong>
+          }
+        </p>
+
+        <button
+          type="submit"
+          class="btn btn-jiivan"
+          [disabled]="!otpComplete() || isVerifying()"
+        >
+          @if (isVerifying()) {
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          }
+          Verify &amp; Continue →
+        </button>
+      </form>
+
+      <p class="auth-footer">Your stars are aligning…</p>
+    </div>
+  </div>
+</div>
